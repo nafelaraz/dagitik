@@ -1,6 +1,6 @@
+import threading
 
-
-
+exitFlag = 0
 
 alfabe = 'abcdefghijklmnopqrstuvwxyz'
 anahtar={}
@@ -21,8 +21,31 @@ while j<26:
 
 print('alfabe=' , alfabe)
 print('anahtar=' , anahtar)
-blok="nafel"
+
 sifreli=[]
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, counter):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.counter = counter
+    def run(self):
+        print "Starting " + self.name
+        exitFlag = 0
+        while not exitFlag:
+
+            # Get lock to synchronize threads
+            threadLock.acquire()
+            oku=open("metin.txt","r")
+            blok=oku.read(l)
+            if blok:
+                sifrele(blok)
+            else:
+                exitFlag=1
+
+            # Free lock to release next thread
+            threadLock.release()
 def sifrele(blok):
     i=0
     while i<l:
@@ -55,10 +78,21 @@ def sifrele(blok):
             dosya=open(isim,"a")
             dosya.write(sifreli[i])
             i+=1
+threadLock = threading.Lock()
+threads = []
+threadID = 1
+k=0
+# Create new threads
+while k<n:
+    tName="thread"+str(threadID)
+    thread = myThread(threadID, tName, k)
+    thread.start()
+    threads.append(thread)
+    threadID += 1
+    k+=1
 
 
-sifrele(blok)
+for t in threads:
+    t.join()
+print "Exiting Main Thread"
 
-#oku=open("metin.txt","r")
-#
-#
