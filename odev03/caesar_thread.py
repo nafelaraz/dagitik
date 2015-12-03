@@ -1,6 +1,8 @@
 import threading
 
 exitFlag = 0
+sayac=0
+
 
 alfabe = 'abcdefghijklmnopqrstuvwxyz'
 anahtar={}
@@ -11,18 +13,21 @@ isim="crypted_"+str(s)+"_"+ str(n)+"_"+str(l)+".txt"
 print(isim)
 dosya = open(isim,"w")
 dosya.close()
-
+code=""
 j=0
 
 while j<26:
 
-    anahtar[alfabe[j]]=alfabe[j-s]
+    anahtar[alfabe[j]]=alfabe[j-s].upper()
+    code+=anahtar[alfabe[j]]
     j+=1
 
 print('alfabe=' , alfabe)
 print('anahtar=' , anahtar)
+print('code=',code)
 
 sifreli=[]
+
 
 class myThread (threading.Thread):
     def __init__(self, threadID, name, counter):
@@ -32,52 +37,60 @@ class myThread (threading.Thread):
         self.counter = counter
     def run(self):
         print "Starting " + self.name
-        exitFlag = 0
-        while not exitFlag:
+        print self.name + " sayac :" + str(sayac)
 
-            # Get lock to synchronize threads
-            threadLock.acquire()
-            oku=open("metin.txt","r")
-            blok=oku.read(l)
-            if blok:
-                sifrele(blok)
-            else:
-                exitFlag=1
+        sifrele()
+
+
 
             # Free lock to release next thread
-            threadLock.release()
-def sifrele(blok):
-    i=0
-    while i<l:
-        if blok[i]==" ":
-            dosya=open(isim,"a")
-            dosya.write(" ")
-            i+=1
-        elif blok[i]==".":
-            dosya=open(isim,"a")
-            dosya.write(".")
-            i+=1
-        elif blok[i]==":":
-            dosya=open(isim,"a")
-            dosya.write(":")
-            i+=1
-        elif blok[i]==";":
-            dosya=open(isim,"a")
-            dosya.write(";")
-            i+=1
-        elif blok[i]=="!":
-            dosya=open(isim,"a")
-            dosya.write("!")
-            i+=1
-        elif blok[i]==",":
-            dosya=open(isim,"a")
-            dosya.write(",")
-            i+=1
-        else:
-            sifreli.append(anahtar[blok[i]])
-            dosya=open(isim,"a")
-            dosya.write(sifreli[i])
-            i+=1
+
+def sifrele():
+    global sayac
+    global exitFlag
+    while sayac<=kac_karakter:
+        oku=open("metin.txt","r")
+        oku.seek(sayac)
+        sayac+=l
+        blok=oku.read(l)
+        blok=blok.lower()
+
+        i=0
+        while i<l:
+            if blok[i]==".":
+                dosya=open(isim,"a")
+                dosya.write(".")
+                i+=1
+            elif blok[i] == " ":
+                dosya=open(isim,"a")
+                dosya.write(" ")
+                i+=1
+            elif blok[i]==":":
+                dosya=open(isim,"a")
+                dosya.write(":")
+                i+=1
+            elif blok[i]==";":
+                dosya=open(isim,"a")
+                dosya.write(";")
+                i+=1
+            elif blok[i]=="!":
+                dosya=open(isim,"a")
+                dosya.write("!")
+                i+=1
+            elif blok[i]==",":
+                dosya=open(isim,"a")
+                dosya.write(",")
+                i+=1
+            else:
+                sifreli.append(anahtar[blok[i]])
+                dosya=open(isim,"a")
+                dosya.write(sifreli[i])
+                i+=1
+
+dosya=open("metin.txt","r")
+dosya.read()
+kac_karakter=dosya.tell()
+
 threadLock = threading.Lock()
 threads = []
 threadID = 1
