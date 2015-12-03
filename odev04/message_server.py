@@ -17,6 +17,11 @@ class myThread (threading.Thread):
         #port = 12344 # Reserve a port for your service.
         #s.bind((host, port)) # Bind to the port
         c.send('Thank you for connecting!')
+        gelen = c.recv()
+        if gelen:
+            print(gelen)
+            c.send('peki',addr)
+
 
 
 
@@ -39,11 +44,13 @@ while True:
     c, addr = s.accept() # Establish connection with client.
     print 'Got connection from', addr
 
+
     tName="thread"+str(threadID)
     thread = myThread(threadID, tName, c)
     thread.start()
     threads.append(thread)
     threadID+=1
+    print "Yeni baglanti bekleniyor"
 
 for t in threads:
     t.join()
