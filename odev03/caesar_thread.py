@@ -1,6 +1,6 @@
 import threading
 
-exitFlag = 0
+
 sayac=0
 
 
@@ -47,7 +47,7 @@ class myThread (threading.Thread):
 
 def sifrele():
     global sayac
-    global exitFlag
+
     while sayac<=kac_karakter:
         threadLock.acquire()
         oku=open("metin.txt","r")
@@ -55,7 +55,7 @@ def sifrele():
         sayac+=l
         blok=oku.read(l)
         blok=blok.lower()
-        
+
 
         i=0
 
