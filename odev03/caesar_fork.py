@@ -1,8 +1,7 @@
-from multiprocessing import Process, Lock
-
-
+from multiprocessing import Process, Queue
 
 sayac=0
+q = Queue()
 
 alfabe = 'abcdefghijklmnopqrstuvwxyz'
 anahtar={}
@@ -25,20 +24,29 @@ while j<26:
 print('alfabe=' , alfabe)
 print('anahtar=' , anahtar)
 print('code=',code)
+dosya=open("metin.txt","r")
+dosya.read()
+kac_karakter=dosya.tell()
+dosya.close()
+
+#Lock = Lock()
+processes = []
 
 sifreli=[]
+sayi=0
+while sayac<=kac_karakter:
+
+    oku=open("metin.txt","r")
+    oku.seek(sayac)
+    sayac+=l
+    q.put(oku.read(l))
+    sayi+=1
+
 
 def sifrele():
-    global sayac
 
-    while sayac<=kac_karakter:
-        Lock.acquire()
-        oku=open("metin.txt","r")
-        oku.seek(sayac)
-        sayac+=l
-        blok=oku.read(l)
-        blok=blok.lower()
-
+    for j in range(sayi):
+        blok=q.get()
         i=0
 
         for i in blok:
@@ -52,16 +60,8 @@ def sifrele():
                 dosya=open(isim,"a")
                 dosya.write(i)
                 dosya.close()
-        Lock.release()
 
 
-
-dosya=open("metin.txt","r")
-dosya.read()
-kac_karakter=dosya.tell()
-
-Lock = Lock()
-processes = []
 
 k=0
 # Create new process
@@ -70,7 +70,7 @@ while k<n:
     p = Process(target=sifrele)
     p.start()
     processes.append(p)
-    p.join()
+    #p.join()
     k+=1
 
 
