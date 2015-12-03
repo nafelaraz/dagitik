@@ -23,9 +23,12 @@ class myThread (threading.Thread):
             delay=random.random
 
         gelen = c.recv()
-        if gelen:
+        if gelen=="end":
+            thread.join()
+        else:
             print(gelen)
             c.send('peki',addr)
+
 
 
 
