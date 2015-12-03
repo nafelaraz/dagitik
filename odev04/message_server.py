@@ -1,5 +1,7 @@
 import threading
 import socket
+import time
+import random
 
 
 class myThread (threading.Thread):
@@ -12,11 +14,14 @@ class myThread (threading.Thread):
         print "Starting " + self.name
         # Get lock to synchronize threads
         threadLock.acquire()
-        #s = socket.socket() # Create a socket object
-        #host = socket.gethostname() # Get local machine name
-        #port = 12344 # Reserve a port for your service.
-        #s.bind((host, port)) # Bind to the port
+        delay=random.random
         c.send('Thank you for connecting!')
+        while true:
+            time.sleep(delay)
+            c.send('Merhaba saat su an',   time.ctime(time.time()) )
+
+            delay=random.random
+
         gelen = c.recv()
         if gelen:
             print(gelen)
