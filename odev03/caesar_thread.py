@@ -43,49 +43,37 @@ class myThread (threading.Thread):
 
 
 
-            # Free lock to release next thread
+
 
 def sifrele():
     global sayac
     global exitFlag
     while sayac<=kac_karakter:
+        threadLock.acquire()
         oku=open("metin.txt","r")
         oku.seek(sayac)
         sayac+=l
         blok=oku.read(l)
         blok=blok.lower()
+        
 
         i=0
-        while i<l:
-            if blok[i]==".":
+
+
+        for i in blok:
+            if i.isalpha():
+                sifreli.append(anahtar[i])
                 dosya=open(isim,"a")
-                dosya.write(".")
-                i+=1
-            elif blok[i] == " ":
-                dosya=open(isim,"a")
-                dosya.write(" ")
-                i+=1
-            elif blok[i]==":":
-                dosya=open(isim,"a")
-                dosya.write(":")
-                i+=1
-            elif blok[i]==";":
-                dosya=open(isim,"a")
-                dosya.write(";")
-                i+=1
-            elif blok[i]=="!":
-                dosya=open(isim,"a")
-                dosya.write("!")
-                i+=1
-            elif blok[i]==",":
-                dosya=open(isim,"a")
-                dosya.write(",")
-                i+=1
+                dosya.write(anahtar[i])
+                dosya.close()
+
             else:
-                sifreli.append(anahtar[blok[i]])
                 dosya=open(isim,"a")
-                dosya.write(sifreli[i])
-                i+=1
+                dosya.write(i)
+                dosya.close()
+        threadLock.release()
+
+
 
 dosya=open("metin.txt","r")
 dosya.read()
