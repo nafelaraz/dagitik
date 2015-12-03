@@ -26,12 +26,39 @@ sifreli=[]
 def sifrele(blok):
     i=0
     while i<l:
-        sifreli.append(anahtar[blok[i]])
-        i+=1
-    print(sifreli)
+        if blok[i]==" ":
+            dosya=open(isim,"a")
+            dosya.write(" ")
+            i+=1
+        elif blok[i]==".":
+            dosya=open(isim,"a")
+            dosya.write(".")
+            i+=1
+        elif blok[i]==":":
+            dosya=open(isim,"a")
+            dosya.write(":")
+            i+=1
+        elif blok[i]==";":
+            dosya=open(isim,"a")
+            dosya.write(";")
+            i+=1
+        elif blok[i]=="!":
+            dosya=open(isim,"a")
+            dosya.write("!")
+            i+=1
+        elif blok[i]==",":
+            dosya=open(isim,"a")
+            dosya.write(",")
+            i+=1
+        else:
+            sifreli.append(anahtar[blok[i]])
+            dosya=open(isim,"a")
+            dosya.write(sifreli[i])
+            i+=1
+
 
 sifrele(blok)
 
 #oku=open("metin.txt","r")
-#dosya=open(isim,"a")
-#dosya.write(oku.read(blok))
+#
+#
