@@ -12,33 +12,26 @@ class myThread (threading.Thread):
         self.counter = counter
     def run(self):
         print "Starting " + self.name
-        # Get lock to synchronize threads
-        threadLock.acquire()
+
         delay=random.random
         c.send('Thank you for connecting!')
-        while true:
-            time.sleep(delay)
-            c.send('Merhaba saat su an',   time.ctime(time.time()) )
+        while True:
+            #time.sleep(delay)
+            #c.send('Merhaba saat su an',   time.ctime(time.time()) )
 
-            delay=random.random
+            #delay=random.random
 
-        gelen = c.recv()
-        if gelen=="end":
-            thread.join()
-        else:
-            print(gelen)
-            c.send('peki',addr)
-
-
+            gelen = c.recv(1024)
+            if gelen=="end":
+                thread.join()
+            else:
+                print(gelen)
+                c.send('peki')
 
 
 
-        # Free lock to release next thread
-        threadLock.release()
 
 
-threadLock = threading.Lock()
-threads = []
 threadID = 1
 s = socket.socket() # Create a socket object
 host = socket.gethostname() # Get local machine name
@@ -48,18 +41,15 @@ s.bind((host, port)) # Bind to the port
 s.listen(5) # Now wait for client connection.
 
 while True:
-
     c, addr = s.accept() # Establish connection with client.
-    print 'Got connection from', addr
-
-
-    tName="thread"+str(threadID)
-    thread = myThread(threadID, tName, c)
-    thread.start()
-    threads.append(thread)
-    threadID+=1
     print "Yeni baglanti bekleniyor"
+    print 'Got connection from', addr
+    tName="thread"+str(threadID)
+    thread = myThread(threadID, tName, 1)
+    thread.start()
 
-for t in threads:
-    t.join()
+    threadID+=1
+
+
+
 print "Exiting Main Thread"
