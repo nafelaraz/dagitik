@@ -1,4 +1,5 @@
-
+import Queue
+import threading
 
 
 
@@ -77,4 +78,74 @@ def parser(self, data):
         self.csend(response)
         ...
         ...
+
+class WriteThread (threading.Thread):
+    def __init__(self, name, cSocket, address, threadQueue, logQueue ):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.cSocket = cSocket
+        self.address = address
+        self.lQueue = logQueue
+        self.tQueue = threadQueue
+    def run(self):
+        self.lQueue.put("Starting " + self.name)
+        while True:
+            queueLock.acquire()
+            ...
+            ...
+            # burasi kuyrukta sirasi gelen mesajlari
+            # gondermek icin kullanilacak
+            if self.threadQueue.qsize() > 0:
+                queue_message = self.threadQueue.get()
+                # gonderilen ozel mesajsa
+                if queue_message[0]:
+                    message_to_send = "MSG " + queue_message[0] + queue_message[2]
+                # genel mesajsa
+                elif queue_message[1]:
+                    message_to_send = "SAY " + queue_message[2]
+                # hicbiri degilse sistem mesajidir
+                else:
+                    message_to_send = "SYS " + queue_message[2]
+            self.csend(message_to_send)
+            queueLock.release()
+            ...
+        self.lQueue.put("Exiting " + self.name)
+
+
+class ReadThread (threading.Thread):
+    def __init__(self, name, cSocket, address, logQueue):
+        threading.Thread.__init__(self)
+        self.name = name
+        self.cSocket = cSocket
+        self.address = address
+        self.lQueue = logQueue
+        self.fihrist = fihrist
+        self.tQueue = threadQueue
+    def parser(self):
+        ...
+        ...
+        ...
+    def run(self):
+        self.lQueue.put("Starting " + self.name)
+        while True:
+            ...
+            ...
+            ...
+            # burasi blocking bir recv halinde duracak
+            # gelen protokol komutlari parserdan gecirilip
+            # ilgili hareketler yapilacak
+            ...
+            ...
+            queue_message = parser(incoming_data)
+            ...
+            ...
+            # istemciye cevap h a z r l a .
+            ...
+            ...
+            # cevap veya cevaplari gondermek zere
+            # threadQueue'ya yaz
+            # lock mekanizmasini unutma
+            ...
+            ...
+        self.lQueue.put("Exiting " + self.name)
 
